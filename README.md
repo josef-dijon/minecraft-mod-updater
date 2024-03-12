@@ -18,17 +18,6 @@ java mod-updater.jar --manifest-url <your/manifest/url> --destination-dir <your/
 ```
 [
     {
-        "url":  "https://drive.google.com/uc?export=download\u0026id=1I71o5haUhZOcCct-FfWmOEwYN6X6crI9",
-        "home-url":  "https://vanillatweaks.net/",
-        "name":  "Vanilla Tweaks",
-        "version":  "1.0",
-        "filename":  "vanilla-tweaks.zip",
-        "md5":  "a549f4470797809e0ea6bed1d005aaab",
-        "destination":  "resourcepacks",
-        "server": false,
-        "client": true
-    },
-    {
         "url":  "https://cdn.modrinth.com/data/HVnmMxH1/versions/D5fox3fg/ComplementaryReimagined_r5.1.1.zip",
         "home-url":  "https://modrinth.com/shader/HVnmMxH1",
         "name":  "Complementary Shaders Reimagined",
