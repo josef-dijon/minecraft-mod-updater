@@ -22,12 +22,12 @@ Place the .jar file in your minecraft root directory, i.e. the one that contains
 Run:
 
 ```bash
-$ java mod-updater-1.0.jar <your/manifest/url> <your/minecraft/directory>
+$ java -jar mod-updater-1.0.jar <your/manifest/url> <your/minecraft/directory>
 ```
 
 If you've put the jar in the minecraft directory:
 ```bash
-$ java mod-updater-1.0.jar <your/manifest/url> .
+$ java -jar mod-updater-1.0.jar <your/manifest/url> .
 ```
 
 ## Sample manifest json file:
