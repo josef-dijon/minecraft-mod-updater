@@ -5,17 +5,31 @@ The program downloads a manifest file containing a structured list of all the mo
 
 The manifest file is a simple json list. There is an example below.
 
+## Build
+
+gradle shadowJar
+
+The output jar file will be in `build/libs/mod-updater-<version>.jar`
+
+I've tested with gradle 8.6 and jdk 21.
+
 ## Usage
 
 Place the .jar file in your minecraft root directory, i.e. the one that contains the mods directory.
 
-Run
+Run:
+
+```bash
+$ java mod-updater-1.0.jar <your/manifest/url> <your/minecraft/directory>
 ```
-java mod-updater.jar --manifest-url <your/manifest/url> --destination-dir <your/minecraft/directory>
+
+If you've put the jar in the minecraft directory:
+```bash
+$ java mod-updater-1.0.jar <your/manifest/url> .
 ```
 
 ## Sample manifest json file:
-```
+```json
 [
     {
         "url":  "https://cdn.modrinth.com/data/HVnmMxH1/versions/D5fox3fg/ComplementaryReimagined_r5.1.1.zip",

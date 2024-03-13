@@ -40,6 +40,7 @@ import java.nio.file.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.ArrayList;
 
 public class ModUpdater {
 
@@ -62,47 +63,36 @@ public class ModUpdater {
 
 	public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 		System.out.println("##################################################################");
-		System.out.println(" Minecraft Mod Updater v" + ModUpdater.class.getPackage().getImplementationVersion());
+		System.out.println(" Minecraft Mod Updater v1.0");
 		System.out.println(" Contact: josef@pixelrift.io");
 		System.out.println("##################################################################");
 
-		if (args.length != 4) {
+		if (args.length != 2) {
 			System.out.println("Usage: ModUpdater --manifest-url <manifest URL> --destination-dir <destination directory>");
 			System.exit(1);
 		}
 
-		String manifestUrl = new String();
-		String destinationDir = new String();
-
-		if (args[0] == "--manifest-url" && args[2] == "--destination-dir") {
-			manifestUrl = args[1];
-			destinationDir = args[3];
-		}
-		else if (args[2] == "--manifest-url" && args[0] == "--destination-dir") {
-			manifestUrl = args[3];
-			destinationDir = args[1];
-		}
-		else {
-			System.out.println("Usage: ModUpdater --manifest-url <manifest URL> --destination-dir <destination directory>");
-			System.exit(1);
-		}
+		String manifestUrl = args[0];
+		String destinationDir = args[1];
 
 		// Download manifest
 		String manifestJson = downloadManifest(manifestUrl);
 		Gson gson = new Gson();
 		List<ModItem> items = gson.fromJson(manifestJson, new TypeToken<List<ModItem>>(){}.getType());
-		List<ModItem> updateList = new ArrayList<>();
+		List<ModItem> updateList = new ArrayList<ModItem>();
 
 		System.out.println("Mods from this manifest:");
 
 		for (ModItem item : items) {
 			item.print();
 
+			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
+
 			if (! Files.exists(destinationPath)) {
 				System.out.println("    Status: MISSING");
 				updateList.add(item);
 			}
-			else if (! verifyFileMD5(filePath, item.md5)) {
+			else if (! verifyFileMD5(destinationPath, item.md5)) {
 				System.out.println("    Status: OUT OF DATE");
 				updateList.add(item);
 			}
@@ -112,11 +102,10 @@ public class ModUpdater {
 		}
 
 		for (ModItem item : updateList) {
-			Path destinationDir = Paths.get(destinationDir, item.destination);
 			Path tmpPath = Paths.get(destinationDir, item.destination, item.filename + ".tmp");
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
 
-			ensureDirectoryExists(destinationDir);
+			ensureDirectoryExists(destinationPath.getParent());
 
 			System.out.println("Downloading " + item.name + "...");
 			downloadFile(item.url, tmpPath);
@@ -126,12 +115,12 @@ public class ModUpdater {
 				Files.delete(tmpPath);
 			}
 			else {
-				System.out.println("Successfully verified. Moving " + item.filename + ".tmp to " itme.filename);
-				Files.move(tmpPath, destinationPath, Files.StandardCopyOption.REPLACE_EXISTING);
+				System.out.println("Successfully verified. Moving " + item.filename + ".tmp to " + item.filename);
+				Files.move(tmpPath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
 			}
 		}
 
-		System.out.println("Mod updates complete!");
+		System.out.println("Mod update complete!");
 	}
 
 	private static String downloadManifest(String manifestUrl) throws IOException {

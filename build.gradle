@@ -21,10 +21,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 plugins {
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
 	id 'java'
 }
 
-group 'mod_updater'
+group 'mod-updater'
 version '1.0'
 
 repositories {
@@ -38,8 +39,7 @@ dependencies {
 jar {
 	manifest {
 		attributes(
-			'Implementation-Version': version,
-			'Main-Class': 'mod_updater.ModUpdater'
+			'Main-Class': 'ModUpdater'
 		)
 	}
 	from {
