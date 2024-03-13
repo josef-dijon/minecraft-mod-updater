@@ -7,7 +7,9 @@ The manifest file is a simple json list. There is an example below.
 
 ## Build
 
-gradle shadowJar
+```bash
+$ gradle shadowJar
+```
 
 The output jar file will be in `build/libs/mod-updater-<version>.jar`
 
