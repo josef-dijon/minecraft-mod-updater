@@ -22,13 +22,15 @@
 //
 // Minecraft mod update.
 //
-// A windows powershell script that automates the synchronization of Minecraft
-// mods, shaders, and resource packs by downloading, updating, and validating
-// files from a manifest, to ensure an up-to-date Minecraft environment.
+// Automates the synchronization of Minecraft mods, shaders, and resource packs
+// by downloading, updating, and validating files from a manifest, to ensure an
+// up-to-date Minecraft environment.
 //
-// Version: 0.1
+// Version: 1.1
 // Changelog:
-// [0.1] - Initial release
+// [1.0] - Initial release
+// [1.1] - Added delete mod mechanism if the mod is marked as not on server and
+//         client
 ///////////////////////////////////////////////////////////////////////////////
 
 import com.google.gson.Gson;
@@ -53,6 +55,7 @@ public class ModUpdater {
 		String destination;
 		boolean server;
 		boolean client;
+		boolean deprecated;
 
 		public void print() {
 			System.out.println("[" + name + "]");
@@ -87,23 +90,38 @@ public class ModUpdater {
 			item.print();
 
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
+			boolean enabled = (item.server || item.client) && ! item.deprecated;
 
-			if (! Files.exists(destinationPath)) {
-				System.out.println("    Status: MISSING");
+			if (! enabled && Files.exists(destinationPath)) {
+				System.out.println("    Status: *** DEPRECATED ***");
 				updateList.add(item);
 			}
-			else if (! verifyFileMD5(destinationPath, item.md5)) {
-				System.out.println("    Status: OUT OF DATE");
+			else if (enabled && ! Files.exists(destinationPath))
+			{
+				System.out.println("    Status: *** MISSING ***");
+				updateList.add(item);
+			}
+			else if (enabled && ! verifyFileMD5(destinationPath, item.md5)) {
+				System.out.println("    Status: *** OUT OF DATE ***");
 				updateList.add(item);
 			}
 			else {
-				System.out.println("    Status: UP TO DATE");
+				System.out.println("    Status: NOTHING TO BE DONE");
 			}
 		}
 
 		for (ModItem item : updateList) {
 			Path tmpPath = Paths.get(destinationDir, item.destination, item.filename + ".tmp");
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
+			
+			boolean enabled = (item.server || item.client) && ! item.deprecated;
+			
+			if (! enabled && Files.exists(destinationPath))
+			{
+				System.out.println("Deleting " + item.name + ".");
+				Files.delete(destinationPath);
+				continue;
+			}
 
 			ensureDirectoryExists(destinationPath.getParent());
 
