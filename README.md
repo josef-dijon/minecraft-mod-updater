@@ -7,7 +7,9 @@ The manifest file is a simple json list. There is an example below.
 
 ## Build
 
-gradle shadowJar
+```bash
+$ gradle shadowJar
+```
 
 The output jar file will be in `build/libs/mod-updater-<version>.jar`
 
@@ -20,12 +22,12 @@ Place the .jar file in your minecraft root directory, i.e. the one that contains
 Run:
 
 ```bash
-$ java mod-updater-1.0.jar <your/manifest/url> <your/minecraft/directory>
+$ java -jar mod-updater-1.0.jar <your/manifest/url> <your/minecraft/directory>
 ```
 
 If you've put the jar in the minecraft directory:
 ```bash
-$ java mod-updater-1.0.jar <your/manifest/url> .
+$ java -jar mod-updater-1.0.jar <your/manifest/url> .
 ```
 
 ## Sample manifest json file:
