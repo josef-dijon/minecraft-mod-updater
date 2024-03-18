@@ -13,7 +13,7 @@ $ gradle shadowJar
 
 The output jar file will be in `build/libs/mod-updater-<version>.jar`
 
-I've tested with gradle 8.6 and jdk 21.
+I've tested with gradle 8.6 and jdk 17.
 
 ## Usage
 
@@ -22,12 +22,12 @@ Place the .jar file in your minecraft root directory, i.e. the one that contains
 Run:
 
 ```bash
-$ java -jar mod-updater-1.0.jar <your/manifest/url> <your/minecraft/directory>
+$ java -jar mod-updater.jar <your/manifest/url> <your/minecraft/directory>
 ```
 
 If you've put the jar in the minecraft directory:
 ```bash
-$ java -jar mod-updater-1.0.jar <your/manifest/url> .
+$ java -jar mod-updater.jar <your/manifest/url> .
 ```
 
 ## Sample manifest json file:
@@ -42,7 +42,8 @@ $ java -jar mod-updater-1.0.jar <your/manifest/url> .
         "md5":  "36b4136593cac57d2f9aa651603b6e0f",
         "destination":  "shaderpacks",
         "server": false,
-        "client": true
+        "client": true,
+        "deprecated": false
     },
     {
         "url":  "https://cdn.modrinth.com/data/ZX66K16c/versions/sr2lCWRH/PickUpNotifier-v20.4.2-1.20.4-Fabric.jar",
@@ -53,7 +54,8 @@ $ java -jar mod-updater-1.0.jar <your/manifest/url> .
         "md5":  "e0bfa2e56dbe238e9271f4942c2ce08c",
         "destination":  "mods",
         "server": false,
-        "client": true
+        "client": true,
+        "deprecated": false
     }
 ]
 ```
