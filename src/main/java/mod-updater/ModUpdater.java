@@ -66,12 +66,12 @@ public class ModUpdater {
 
 	public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 		System.out.println("##################################################################");
-		System.out.println(" Minecraft Mod Updater v1.0");
+		System.out.println(" Minecraft Mod Updater v1.1");
 		System.out.println(" Contact: josef@pixelrift.io");
 		System.out.println("##################################################################");
 
 		if (args.length != 2) {
-			System.out.println("Usage: ModUpdater --manifest-url <manifest URL> --destination-dir <destination directory>");
+			System.out.println("Usage: ModUpdater <manifest URL> <destination directory>");
 			System.exit(1);
 		}
 
