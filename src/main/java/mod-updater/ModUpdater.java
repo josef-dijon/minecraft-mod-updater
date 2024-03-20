@@ -31,6 +31,7 @@
 // [1.0] - Initial release
 // [1.1] - Added delete mod mechanism if the mod is marked as not on server and
 //         client
+// [1.1.1] - Added a --server flag for skipping client only mods
 ///////////////////////////////////////////////////////////////////////////////
 
 import com.google.gson.Gson;
@@ -66,12 +67,20 @@ public class ModUpdater {
 
 	public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 		System.out.println("##################################################################");
-		System.out.println(" Minecraft Mod Updater v1.1");
+		System.out.println(" Minecraft Mod Updater v1.1.1");
 		System.out.println(" Contact: josef@pixelrift.io");
 		System.out.println("##################################################################");
+		
+		boolean serverOnly = false;
 
-		if (args.length != 2) {
-			System.out.println("Usage: ModUpdater <manifest URL> <destination directory>");
+		if (args.length == 3 && args[2].equals("--server")) {
+			serverOnly = true;
+		}
+		else if (args.length == 2) {
+			serverOnly = false;
+		}
+		else {
+			System.out.println("Usage: ModUpdater <manifest URL> <destination directory> [--server]");
 			System.exit(1);
 		}
 
@@ -91,6 +100,11 @@ public class ModUpdater {
 
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
 			boolean enabled = (item.server || item.client) && ! item.deprecated;
+			
+			if (serverOnly && ! item.server)
+			{
+				enabled = false;
+			}
 
 			if (! enabled && Files.exists(destinationPath)) {
 				System.out.println("    Status: *** DEPRECATED ***");
@@ -115,6 +129,11 @@ public class ModUpdater {
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
 			
 			boolean enabled = (item.server || item.client) && ! item.deprecated;
+			
+			if (serverOnly && ! item.server)
+			{
+				enabled = false;
+			}
 			
 			if (! enabled && Files.exists(destinationPath))
 			{
