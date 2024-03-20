@@ -30,6 +30,11 @@ If you've put the jar in the minecraft directory:
 $ java -jar mod-updater.jar <your/manifest/url> .
 ```
 
+If you're running a server and only want to download the server specific mods, just add the `--server` flag:
+```bash
+$ java -jar mod-updater.jar <your/manifest/url> . --server
+```
+
 ## Sample manifest json file:
 ```json
 [
