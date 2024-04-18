@@ -32,6 +32,7 @@
 // [1.1] - Added delete mod mechanism if the mod is marked as not on server and
 //         client
 // [1.1.1] - Added a --server flag for skipping client only mods
+// [1.1.2] - Added a check for the client enable flag to allow server only mods
 ///////////////////////////////////////////////////////////////////////////////
 
 import com.google.gson.Gson;
@@ -63,21 +64,30 @@ public class ModUpdater {
 			System.out.println("    Filename: " + destination + "/" + filename);
 			System.out.println("    Version: " + version);
 		}
+		
+		public boolean isEnabled(boolean serverMode) {
+			if (deprecated)
+			{
+				return false;
+			}
+			
+			return serverMode ? server : client;
+		}
 	}
 
 	public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 		System.out.println("##################################################################");
-		System.out.println(" Minecraft Mod Updater v1.1.1");
+		System.out.println(" Minecraft Mod Updater v1.1.2");
 		System.out.println(" Contact: josef@pixelrift.io");
 		System.out.println("##################################################################");
 		
-		boolean serverOnly = false;
+		boolean serverMode = false;
 
 		if (args.length == 3 && args[2].equals("--server")) {
-			serverOnly = true;
+			serverMode = true;
 		}
 		else if (args.length == 2) {
-			serverOnly = false;
+			serverMode = false;
 		}
 		else {
 			System.out.println("Usage: ModUpdater <manifest URL> <destination directory> [--server]");
@@ -99,12 +109,8 @@ public class ModUpdater {
 			item.print();
 
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
-			boolean enabled = (item.server || item.client) && ! item.deprecated;
 			
-			if (serverOnly && ! item.server)
-			{
-				enabled = false;
-			}
+			boolean enabled = item.isEnabled(serverMode);
 
 			if (! enabled && Files.exists(destinationPath)) {
 				System.out.println("    Status: *** DEPRECATED ***");
@@ -128,17 +134,14 @@ public class ModUpdater {
 			Path tmpPath = Paths.get(destinationDir, item.destination, item.filename + ".tmp");
 			Path destinationPath = Paths.get(destinationDir, item.destination, item.filename);
 			
-			boolean enabled = (item.server || item.client) && ! item.deprecated;
-			
-			if (serverOnly && ! item.server)
+			if (! item.isEnabled(serverMode))
 			{
-				enabled = false;
-			}
-			
-			if (! enabled && Files.exists(destinationPath))
-			{
-				System.out.println("Deleting " + item.name + ".");
-				Files.delete(destinationPath);
+				if (Files.exists(destinationPath))
+				{
+					System.out.println("Deleting " + item.name + ".");
+					Files.delete(destinationPath);
+				}
+				
 				continue;
 			}
 
